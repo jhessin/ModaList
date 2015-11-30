@@ -1,4 +1,5 @@
 <resources>
 	<string name="app_name">ModaList</string>
 	<string name="title_activity_main">MainActivity</string>
+	<string name="string_all_lists">All Lists</string>
 </resources>

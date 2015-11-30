@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="modes">
+		<item>@string/mode_create</item>
+		<item>@string/mode_edit</item>
+		<item>@string/mode_check</item>
+	</string-array>
+	<string name="mode_check">Check</string>
+	<string name="mode_edit">Edit</string>
+	<string name="mode_create">Create</string>
+</resources>

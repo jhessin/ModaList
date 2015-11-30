@@ -13,4 +13,24 @@
 	tools:context="com.grillbrickstudios.modalist.model.view.MainActivity"
 	tools:showIn="@layout/activity_main">
 
+	<ListView
+		android:id="@+id/listView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentStart="true"
+		android:layout_marginBottom="@dimen/design_fab_size_normal"/>
+
+	<EditText
+		android:id="@+id/text_entry"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignEnd="@+id/listView"
+		android:layout_alignParentBottom="true"
+		android:layout_alignRight="@+id/listView"
+		android:layout_marginRight="@dimen/design_fab_size_normal"
+		android:inputType="textCapWords"/>
+
 </RelativeLayout>
