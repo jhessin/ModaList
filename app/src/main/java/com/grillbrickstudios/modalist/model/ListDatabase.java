@@ -23,7 +23,7 @@ public class ListDatabase {
 					"%s TEXT, " +
 					"%s TEXT, " +
 					"%s INTEGER)",
-			Table.TBL_NAME, Table.C_ID, Table.C_LIST_NAME, Table.C_ITEM_NAME, Table.C_CHECKED
+			T.TBL_NAME, T.C_ID, T.C_LIST_NAME, T.C_ITEM_NAME, T.C_CHECKED
 	);
 	private static ListDatabase singleton;
 	private final Context _context;
@@ -85,11 +85,11 @@ public class ListDatabase {
 		}
 
 		ContentValues values = new ContentValues();
-		values.put(Table.C_CHECKED, checked ? 1 : 0);
-		values.put(Table.C_LIST_NAME, listName);
-		values.put(Table.C_ITEM_NAME, itemName);
+		values.put(T.C_CHECKED, checked ? 1 : 0);
+		values.put(T.C_LIST_NAME, listName);
+		values.put(T.C_ITEM_NAME, itemName);
 
-		return _database.insert(Table.TBL_NAME, null, values);
+		return _database.insert(T.TBL_NAME, null, values);
 	}
 
 	public boolean itemExists(String listName, String itemName) {
@@ -108,9 +108,9 @@ public class ListDatabase {
 		if (id < 0) return -1;
 		if (!isValidString(itemName)) return 0;
 		ContentValues values = new ContentValues();
-		values.put(Table.C_ITEM_NAME, itemName);
+		values.put(T.C_ITEM_NAME, itemName);
 
-		return _database.update(Table.TBL_NAME, values, String.format("%s = %d", Table.C_ID, id),
+		return _database.update(T.TBL_NAME, values, String.format("%s = %d", T.C_ID, id),
 				null);
 	}
 
@@ -124,9 +124,9 @@ public class ListDatabase {
 	public long updateItem(long id, boolean checked) {
 		if (id < 0) return -1;
 		ContentValues values = new ContentValues();
-		values.put(Table.C_CHECKED, checked ? 1 : 0);
+		values.put(T.C_CHECKED, checked ? 1 : 0);
 
-		return _database.update(Table.TBL_NAME, values, String.format("%s = %d", Table.C_ID, id),
+		return _database.update(T.TBL_NAME, values, String.format("%s = %d", T.C_ID, id),
 				null);
 	}
 
@@ -137,7 +137,7 @@ public class ListDatabase {
 	 */
 	public boolean deleteAll() {
 		int doneDelete;
-		doneDelete = _database.delete(Table.TBL_NAME, null, null);
+		doneDelete = _database.delete(T.TBL_NAME, null, null);
 		return doneDelete > 0;
 	}
 
@@ -150,7 +150,7 @@ public class ListDatabase {
 	public boolean delete(long id) {
 		if (id < 0) return false;
 		int itemsDeleted;
-		itemsDeleted = _database.delete(Table.TBL_NAME, String.format("%s = %d", Table.C_ID, id),
+		itemsDeleted = _database.delete(T.TBL_NAME, String.format("%s = %d", T.C_ID, id),
 				null);
 		return itemsDeleted > 0;
 	}
@@ -169,8 +169,8 @@ public class ListDatabase {
 	 * @throws SQLException
 	 */
 	public Cursor queryMetaList() throws SQLException {
-		return _database.query(Table.TBL_NAME, Table.S_META_LIST, null, null, Table.C_LIST_NAME, null,
-				Table.C_ID);
+		return _database.query(T.TBL_NAME, T.S_META_LIST, null, null, T.C_LIST_NAME, null,
+				T.C_ID);
 	}
 
 	/**
@@ -181,9 +181,9 @@ public class ListDatabase {
 	 */
 	public Cursor queryList(String listName) {
 		if (isValidString(listName))
-			return _database.query(Table.TBL_NAME, null, String.format("%s = %s AND ", Table
-							.C_LIST_NAME, wrapString(listName)) + Table.W_CLAUSE, null, Table.C_LIST_NAME, null,
-					Table
+			return _database.query(T.TBL_NAME, null, String.format("%s = %s AND ", T
+							.C_LIST_NAME, wrapString(listName)) + T.W_CLAUSE, null, T.C_LIST_NAME, null,
+					T
 							.C_ID);
 		else
 			return queryMetaList();
@@ -191,8 +191,8 @@ public class ListDatabase {
 
 	public Cursor queryListItem(String listName, String itemName) {
 		if (isValidString(listName) && isValidString(itemName))
-			return _database.query(Table.TBL_NAME, null, String.format("%s = %s AND %s " +
-					"= %s", Table.C_LIST_NAME, wrapString(listName), Table.C_ITEM_NAME, wrapString(itemName)), null, null, null, null);
+			return _database.query(T.TBL_NAME, null, String.format("%s = %s AND %s " +
+					"= %s", T.C_LIST_NAME, wrapString(listName), T.C_ITEM_NAME, wrapString(itemName)), null, null, null, null);
 		else
 			return queryMetaList();
 	}
@@ -205,17 +205,29 @@ public class ListDatabase {
 	 */
 	public Cursor queryItem(long id) {
 		if (id < 0) return null;
-		return _database.query(Table.TBL_NAME, null, String.format("%s = %d", Table
-				.C_ID, id), null, Table.C_LIST_NAME, null, Table.C_ID);
+		return _database.query(T.TBL_NAME, null, String.format("%s = %d", T
+				.C_ID, id), null, T.C_LIST_NAME, null, T.C_ID);
 	}
 
 	public boolean isChecked(long id) {
 		if (id < 0) return false;
-		Cursor cursor = _database.query(Table.TBL_NAME, null, String.format("%s = %d", Table
-				.C_ID, id), null, Table.C_LIST_NAME, null, Table.C_ID);
+		Cursor cursor = _database.query(T.TBL_NAME, null, String.format("%s = %d", T
+				.C_ID, id), null, T.C_LIST_NAME, null, T.C_ID);
 		if (cursor == null) return false;
 		cursor.moveToFirst();
-		return cursor.getInt(cursor.getColumnIndex(Table.C_ID)) > 0;
+		return cursor.getInt(cursor.getColumnIndex(T.C_ID)) > 0;
+	}
+
+	public ListItem getItem(long id) {
+		if (id < 0) return null;
+		Cursor cursor = _database.query(T.TBL_NAME, null, String.format("%s = %d", T.C_ID, id),
+				null, T.C_LIST_NAME, null, T.C_ID);
+		if (cursor == null || cursor.getCount() == 0) return null;
+		ListItem item = new ListItem();
+		item.IsChecked = cursor.getInt(cursor.getColumnIndex(T.C_CHECKED)) != 0;
+		item.ListName = cursor.getString(cursor.getColumnIndex(T.C_LIST_NAME));
+		item.ItemName = cursor.getString(cursor.getColumnIndex(T.C_ITEM_NAME));
+		return item;
 	}
 
 	/**
@@ -243,7 +255,7 @@ public class ListDatabase {
 		 * @param context to use to open or create the database
 		 */
 		public DatabaseHelper(Context context) {
-			super(context, Table.DB_NAME, null, Table.DB_VERSION);
+			super(context, T.DB_NAME, null, T.DB_VERSION);
 		}
 
 		/**
@@ -281,7 +293,7 @@ public class ListDatabase {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.w(TAG, String.format("Uprading database from version %d to %d, which will destroy" +
 					" all old data", oldVersion, newVersion));
-			db.execSQL("DROP TABLE IF EXISTS " + Table.TBL_NAME);
+			db.execSQL("DROP TABLE IF EXISTS " + T.TBL_NAME);
 			onCreate(db);
 		}
 	}

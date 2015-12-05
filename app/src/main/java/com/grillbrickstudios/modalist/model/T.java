@@ -4,7 +4,7 @@ package com.grillbrickstudios.modalist.model;
  * Created by jhess on 11/29/2015 for ModaList.
  * A list of variables used to create the database.
  */
-public final class Table {
+public final class T {
 	public static final int DB_VERSION = 1;
 	public static final String DB_NAME = "ListDb.db";
 	public static final String TBL_NAME = "ListTable";

@@ -10,7 +10,7 @@ import com.grillbrickstudios.modalist.App;
 import com.grillbrickstudios.modalist.R;
 import com.grillbrickstudios.modalist.controller.adapters.CheckCursorAdapter;
 import com.grillbrickstudios.modalist.model.ListDatabase;
-import com.grillbrickstudios.modalist.model.Table;
+import com.grillbrickstudios.modalist.model.T;
 import com.grillbrickstudios.modalist.view.custom.ModeSpinner;
 
 /**
@@ -36,7 +36,7 @@ public class ListViewManager {
 
 		// The Columns to bind to the metalist view.
 		String[] from = new String[]{
-				Table.C_LIST_NAME
+				T.C_LIST_NAME
 		};
 
 		// The views to bind.
@@ -49,7 +49,7 @@ public class ListViewManager {
 
 		// The columns to bind to the item list view.
 		from = new String[]{
-				Table.C_ITEM_NAME
+				T.C_ITEM_NAME
 		};
 
 		_createAdapter = new SimpleCursorAdapter(_context, R.layout.listview_create, null, from,
@@ -58,8 +58,8 @@ public class ListViewManager {
 
 		// The columns to bind to the checklist view.
 		from = new String[]{
-				Table.C_CHECKED,
-				Table.C_ITEM_NAME
+				T.C_CHECKED,
+				T.C_ITEM_NAME
 		};
 
 		// The views to bind to the checklist view.
@@ -223,7 +223,7 @@ public class ListViewManager {
 		if (item < 0) return null;
 		Cursor cursor = _db.queryItem(item);
 		if (cursor == null) return null;
-		return cursor.getString(cursor.getColumnIndex(Table.C_ITEM_NAME));
+		return cursor.getString(cursor.getColumnIndex(T.C_ITEM_NAME));
 	}
 
 	public boolean selectItem(long itemID) {

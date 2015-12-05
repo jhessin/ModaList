@@ -94,13 +94,13 @@ public class InputManager implements View.OnClickListener, AdapterView.OnItemCli
 		if (cursor == null || cursor.getCount() <= 0) return;
 		cursor.moveToPosition(position);
 		if (_lvManager.listSelected()) {
-			_lvManager.selectItem(cursor.getInt(cursor.getColumnIndex(Table.C_ID)));
+			_lvManager.selectItem(cursor.getInt(cursor.getColumnIndex(T.C_ID)));
 			String text = _lvManager.getSelectedItemText();
 			_titleBar.setText(text);
 			_textEntry.setText(text);
 			_fabDelete.show();
 		} else {
-			String listName = cursor.getString(cursor.getColumnIndex(Table.C_LIST_NAME));
+			String listName = cursor.getString(cursor.getColumnIndex(T.C_LIST_NAME));
 			_lvManager.selectList(listName);
 			_titleBar.setText(listName);
 			_fabBack.show();

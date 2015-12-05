@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.grillbrickstudios.modalist.R;
 import com.grillbrickstudios.modalist.model.ListDatabase;
-import com.grillbrickstudios.modalist.model.Table;
+import com.grillbrickstudios.modalist.model.T;
 
 /**
  * Created by jhess on 11/29/2015 for ModaList.
@@ -72,7 +72,7 @@ public class CheckCursorAdapter extends SimpleCursorAdapter {
 	public void bindView(View view, Context context, Cursor cursor) {
 		if (view == view.findViewById(R.id.box)) {
 			final ListDatabase db = ListDatabase.getInstance();
-			final int id = cursor.getInt(cursor.getColumnIndex(Table.C_ID));
+			final int id = cursor.getInt(cursor.getColumnIndex(T.C_ID));
 			CheckBox box = (CheckBox) view;
 			//noinspection ConstantConditions
 			if (box == null) return;
