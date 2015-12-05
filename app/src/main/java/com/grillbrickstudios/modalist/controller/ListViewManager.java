@@ -1,7 +1,6 @@
 package com.grillbrickstudios.modalist.controller;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -10,7 +9,8 @@ import com.grillbrickstudios.modalist.App;
 import com.grillbrickstudios.modalist.R;
 import com.grillbrickstudios.modalist.controller.adapters.CheckCursorAdapter;
 import com.grillbrickstudios.modalist.model.ListDatabase;
-import com.grillbrickstudios.modalist.model.T;
+import com.grillbrickstudios.modalist.model.structs.ListItem;
+import com.grillbrickstudios.modalist.model.structs.T;
 import com.grillbrickstudios.modalist.view.custom.ModeSpinner;
 
 /**
@@ -219,21 +219,20 @@ public class ListViewManager {
 		return _selectedList != null;
 	}
 
-	public String getItemText(long item) {
-		if (item < 0) return null;
-		Cursor cursor = _db.queryItem(item);
-		if (cursor == null) return null;
-		return cursor.getString(cursor.getColumnIndex(T.C_ITEM_NAME));
+	public String getItemText(long id) {
+		if (id < 0) return null;
+		ListItem item = _db.getItem(id);
+		return item.ItemName;
 	}
 
 	public boolean selectItem(long itemID) {
-		long old = _selectedItem;
+		if (itemID == _selectedItem) return true;
 		if (itemID < 0) {
 			deselectItem();
 			return false;
 		}
-		Cursor cursor = _db.queryItem(itemID);
-		if (cursor != null && cursor.getCount() > 0) {
+		ListItem item = _db.getItem(itemID);
+		if (item != null) {
 			_selectedItem = itemID;
 			return true;
 		}

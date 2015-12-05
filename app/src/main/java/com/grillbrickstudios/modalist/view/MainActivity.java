@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import com.grillbrickstudios.modalist.App;
 import com.grillbrickstudios.modalist.R;
-import com.grillbrickstudios.modalist.model.InputManager;
+import com.grillbrickstudios.modalist.controller.InputManager;
 
 /**
  * The entry point of the program.

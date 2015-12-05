@@ -4,12 +4,15 @@ package com.grillbrickstudios.modalist.model;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.grillbrickstudios.modalist.App;
+import com.grillbrickstudios.modalist.model.structs.ListItem;
+import com.grillbrickstudios.modalist.model.structs.T;
 
 /**
  * Created by jhess on 11/29/2015 for ModaList.
@@ -17,14 +20,7 @@ import com.grillbrickstudios.modalist.App;
  */
 public class ListDatabase {
 
-	private static final String DATABASE_CREATE = String.format(
-			"CREATE TABLE if not exists %s (" +
-					"%s INTEGER PRIMARY KEY AUTOINCREMENT, " +
-					"%s TEXT, " +
-					"%s TEXT, " +
-					"%s INTEGER)",
-			T.TBL_NAME, T.C_ID, T.C_LIST_NAME, T.C_ITEM_NAME, T.C_CHECKED
-	);
+
 	private static ListDatabase singleton;
 	private final Context _context;
 	/**
@@ -79,22 +75,42 @@ public class ListDatabase {
 	 * @return The row id of the new row.
 	 */
 	public long insertItem(String listName, String itemName, boolean checked) {
-		if (itemExists(listName, itemName)) return queryListItem(listName, itemName).getPosition();
-		if (!isValidString(listName) || !isValidString(itemName)) {
-			return -1;
-		}
+		return insertItem(new ListItem(listName, itemName, checked));
+	}
 
+	/**
+	 * Inserts a new item.
+	 *
+	 * @param item A wrapper object that holds the data to add.
+	 * @return
+	 */
+	public long insertItem(ListItem item) {
+		if (item == null) return -1;
+		if (!isValidItem(item)) return -1;
+		if (itemExists(item)) return queryListItem(item).getPosition();
+
+		return _database.insert(T.TBL_NAME, null, itemToValues(item));
+	}
+
+	public ContentValues itemToValues(ListItem item) {
 		ContentValues values = new ContentValues();
-		values.put(T.C_CHECKED, checked ? 1 : 0);
-		values.put(T.C_LIST_NAME, listName);
-		values.put(T.C_ITEM_NAME, itemName);
+		values.put(T.C_LIST_NAME, item.ListName);
+		values.put(T.C_ITEM_NAME, item.ItemName);
+		values.put(T.C_CHECKED, item.IsChecked ? 1 : 0);
+		return values;
+	}
 
-		return _database.insert(T.TBL_NAME, null, values);
+	public Cursor queryListItem(ListItem item) {
+		return queryListItem(item.ListName, item.ItemName);
 	}
 
 	public boolean itemExists(String listName, String itemName) {
 		Cursor cursor = queryListItem(listName, itemName);
-		return cursor == null || cursor.getCount() == 0;
+		return cursor != null && cursor.getCount() != 0;
+	}
+
+	private boolean itemExists(ListItem item) {
+		return itemExists(item.ListName, item.ItemName);
 	}
 
 	/**
@@ -182,7 +198,7 @@ public class ListDatabase {
 	public Cursor queryList(String listName) {
 		if (isValidString(listName))
 			return _database.query(T.TBL_NAME, null, String.format("%s = %s AND ", T
-							.C_LIST_NAME, wrapString(listName)) + T.W_CLAUSE, null, T.C_LIST_NAME, null,
+							.C_LIST_NAME, wrapString(listName)) + T.HIDE_EMPTY, null, T.C_LIST_NAME, null,
 					T
 							.C_ID);
 		else
@@ -197,37 +213,27 @@ public class ListDatabase {
 			return queryMetaList();
 	}
 
-	/**
-	 * Query the database for a single item by its id.
-	 *
-	 * @param id the id of the item to find.
-	 * @return A cursor to enumerate the results.
-	 */
-	public Cursor queryItem(long id) {
+	private Cursor queryListItem(long id){
 		if (id < 0) return null;
-		return _database.query(T.TBL_NAME, null, String.format("%s = %d", T
-				.C_ID, id), null, T.C_LIST_NAME, null, T.C_ID);
+		return _database.query(T.TBL_NAME, null, String.format("%s = %d", T.C_ID, id), null,
+				null, null, null);
 	}
 
 	public boolean isChecked(long id) {
-		if (id < 0) return false;
-		Cursor cursor = _database.query(T.TBL_NAME, null, String.format("%s = %d", T
-				.C_ID, id), null, T.C_LIST_NAME, null, T.C_ID);
-		if (cursor == null) return false;
-		cursor.moveToFirst();
-		return cursor.getInt(cursor.getColumnIndex(T.C_ID)) > 0;
+		return id >= 0 && getItem(id).IsChecked;
 	}
 
 	public ListItem getItem(long id) {
 		if (id < 0) return null;
-		Cursor cursor = _database.query(T.TBL_NAME, null, String.format("%s = %d", T.C_ID, id),
-				null, T.C_LIST_NAME, null, T.C_ID);
+		Cursor cursor = queryListItem(id); // _database.query(T.TBL_NAME, null, null, null, null,
+		// null, T.C_ID);
 		if (cursor == null || cursor.getCount() == 0) return null;
-		ListItem item = new ListItem();
-		item.IsChecked = cursor.getInt(cursor.getColumnIndex(T.C_CHECKED)) != 0;
-		item.ListName = cursor.getString(cursor.getColumnIndex(T.C_LIST_NAME));
-		item.ItemName = cursor.getString(cursor.getColumnIndex(T.C_ITEM_NAME));
-		return item;
+		cursor.moveToFirst();
+		String listName = cursor.getString(cursor.getColumnIndex(T.C_LIST_NAME));
+		String itemName = cursor.getString(cursor.getColumnIndex(T.C_ITEM_NAME));
+		Boolean isChecked = cursor.getInt(cursor.getColumnIndex(T.C_CHECKED)) != 0;
+		cursor.close();
+		return new ListItem(listName, itemName, isChecked);
 	}
 
 	/**
@@ -240,11 +246,31 @@ public class ListDatabase {
 		return s != null && s.trim().length() > 0;
 	}
 
+	public boolean isValidItem(ListItem item) {
+		return isValidString(item.ListName) && isValidString(item.ItemName);
+	}
+
+	public void drop() {
+		_dbHelper.onUpgrade(_database, 0, 1);
+	}
+
+	public long size() {
+		return DatabaseUtils.queryNumEntries(_database, T.TBL_NAME);
+	}
+
 	/**
 	 * Internal class to create the database file.
 	 */
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		private static final String TAG = ".gbs.DatabaseHelper";
+		private static final String DATABASE_CREATE = String.format(
+				"CREATE TABLE if not exists %s (" +
+						"%s INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT, " +
+						"%s TEXT, " +
+						"%s TEXT, " +
+						"%s INTEGER)",
+				T.TBL_NAME, T.C_ID, T.C_LIST_NAME, T.C_ITEM_NAME, T.C_CHECKED
+		);
 
 		/**
 		 * Create a helper object to create, open, and/or manage a database.

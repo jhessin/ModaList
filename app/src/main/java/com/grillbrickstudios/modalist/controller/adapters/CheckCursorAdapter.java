@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.grillbrickstudios.modalist.R;
 import com.grillbrickstudios.modalist.model.ListDatabase;
-import com.grillbrickstudios.modalist.model.T;
+import com.grillbrickstudios.modalist.model.structs.T;
 
 /**
  * Created by jhess on 11/29/2015 for ModaList.

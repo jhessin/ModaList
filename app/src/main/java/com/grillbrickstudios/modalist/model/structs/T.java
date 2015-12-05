@@ -1,4 +1,4 @@
-package com.grillbrickstudios.modalist.model;
+package com.grillbrickstudios.modalist.model.structs;
 
 /**
  * Created by jhess on 11/29/2015 for ModaList.
@@ -15,6 +15,6 @@ public final class T {
 	public static final String EMPTY_ITEM = "'...'";
 
 	public static final String[] S_META_LIST = new String[]{String.format("MIN(%s)", C_ID), C_ID,
-			C_LIST_NAME};
-	public static final String W_CLAUSE = C_ITEM_NAME + " <> " + EMPTY_ITEM;
+			"*"};
+	public static final String HIDE_EMPTY = C_ITEM_NAME + " <> " + EMPTY_ITEM;
 }

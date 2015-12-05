@@ -1,4 +1,4 @@
-package com.grillbrickstudios.modalist.model;
+package com.grillbrickstudios.modalist.controller;
 
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.grillbrickstudios.modalist.R;
-import com.grillbrickstudios.modalist.controller.ListViewManager;
+import com.grillbrickstudios.modalist.model.structs.T;
 import com.grillbrickstudios.modalist.view.custom.ModeSpinner;
 
 /**
@@ -110,13 +110,6 @@ public class InputManager implements View.OnClickListener, AdapterView.OnItemCli
 
 
 	/**
-	 * Closes the openned database.
-	 */
-	public void close() {
-		_lvManager.close();
-	}
-
-	/**
 	 * <p>Callback method to be invoked when an item in this view has been
 	 * selected. This callback is invoked only when the newly selected
 	 * position is different from the previously selected position or if
@@ -135,6 +128,25 @@ public class InputManager implements View.OnClickListener, AdapterView.OnItemCli
 		if (view == _modeSpinner) {
 			_lvManager.notifyDataSetChanged();
 		}
+	}
+
+	/**
+	 * Callback method to be invoked when the selection disappears from this
+	 * view. The selection can disappear for instance when touch is activated
+	 * or when the adapter becomes empty.
+	 *
+	 * @param parent The AdapterView that now contains no selected item.
+	 */
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		_lvManager.notifyDataSetChanged();
+	}
+
+	/**
+	 * Closes the openned database.
+	 */
+	public void close() {
+		_lvManager.close();
 	}
 
 	// --- GETTERS AND SETTERS --- //
@@ -170,18 +182,6 @@ public class InputManager implements View.OnClickListener, AdapterView.OnItemCli
 	public void setListView(ListView listView) {
 		listView.setOnItemClickListener(this);
 		_lvManager.setListView(listView);
-	}
-
-	/**
-	 * Callback method to be invoked when the selection disappears from this
-	 * view. The selection can disappear for instance when touch is activated
-	 * or when the adapter becomes empty.
-	 *
-	 * @param parent The AdapterView that now contains no selected item.
-	 */
-	@Override
-	public void onNothingSelected(AdapterView<?> parent) {
-
 	}
 
 	public void setTextEntry(EditText textEntry) {
