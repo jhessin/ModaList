@@ -82,7 +82,7 @@ public class ListDatabase {
 	 * Inserts a new item.
 	 *
 	 * @param item A wrapper object that holds the data to add.
-	 * @return
+	 * @return The row id of the new row.
 	 */
 	public long insertItem(ListItem item) {
 		if (item == null) return -1;
@@ -109,7 +109,7 @@ public class ListDatabase {
 		return cursor != null && cursor.getCount() != 0;
 	}
 
-	private boolean itemExists(ListItem item) {
+	public boolean itemExists(ListItem item) {
 		return itemExists(item.ListName, item.ItemName);
 	}
 
@@ -168,6 +168,15 @@ public class ListDatabase {
 		int itemsDeleted;
 		itemsDeleted = _database.delete(T.TBL_NAME, String.format("%s = %d", T.C_ID, id),
 				null);
+
+		_database.execSQL(String.format(
+				"UPDATE %s " +
+						"SET %s = %s - 1 " +
+						"WHERE %s > %d",
+				T.TBL_NAME,
+				T.C_ID, T.C_ID,
+				T.C_ID, id));
+
 		return itemsDeleted > 0;
 	}
 
@@ -198,7 +207,7 @@ public class ListDatabase {
 	public Cursor queryList(String listName) {
 		if (isValidString(listName))
 			return _database.query(T.TBL_NAME, null, String.format("%s = %s AND ", T
-							.C_LIST_NAME, wrapString(listName)) + T.HIDE_EMPTY, null, T.C_LIST_NAME, null,
+							.C_LIST_NAME, wrapString(listName)) + T.HIDE_EMPTY, null, null, null,
 					T
 							.C_ID);
 		else
@@ -256,6 +265,18 @@ public class ListDatabase {
 
 	public long size() {
 		return DatabaseUtils.queryNumEntries(_database, T.TBL_NAME);
+	}
+
+	public int insertItem(ListItem[] items) {
+		if (items.length < 1) return 0;
+		int count = 0;
+		for (ListItem item :
+				items) {
+			long id = insertItem(item);
+			if (id >= 0)
+				count++;
+		}
+		return count;
 	}
 
 	/**
