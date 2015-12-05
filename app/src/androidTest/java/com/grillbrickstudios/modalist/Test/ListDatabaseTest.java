@@ -54,7 +54,7 @@ public class ListDatabaseTest extends TestCase {
 		assertEquals(_itemName, item.ItemName);
 
 		db.deleteAll();
-		item = db.getItem(0);
+		item = db.getItem(1);
 		assertNull(item);
 
 		item = _sampleItem;
@@ -179,7 +179,7 @@ public class ListDatabaseTest extends TestCase {
 		db.insertItem(_sampleItems);
 		assertEquals(_sampleItems.length, db.size());
 		for (int i = 0; i < _sampleItems.length; i++) {
-			assertEquals(_sampleItems[i].IsChecked, db.isChecked(i));
+			assertEquals(_sampleItems[i].IsChecked, db.isChecked(i+1));
 		}
 	}
 }

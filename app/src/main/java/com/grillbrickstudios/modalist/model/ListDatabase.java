@@ -228,14 +228,15 @@ public class ListDatabase {
 				null, null, null);
 	}
 
-	public boolean isChecked(long id) {
-		return id >= 0 && getItem(id).IsChecked;
+	public boolean isChecked(long id) throws IllegalArgumentException {
+		ListItem item = getItem(id);
+		assert item != null;
+		return item.IsChecked;
 	}
 
 	public ListItem getItem(long id) {
 		if (id < 0) return null;
-		Cursor cursor = queryListItem(id); // _database.query(T.TBL_NAME, null, null, null, null,
-		// null, T.C_ID);
+		Cursor cursor = queryListItem(id);
 		if (cursor == null || cursor.getCount() == 0) return null;
 		cursor.moveToFirst();
 		String listName = cursor.getString(cursor.getColumnIndex(T.C_LIST_NAME));
