@@ -9,16 +9,17 @@ import com.grillbrickstudios.modalist.model.structs.T;
 
 /**
  * Created by jhess on 12/5/2015 for ModaList.
+ * A simple cursor adapter for use when the list is in Create mode.
  */
 public class CreateCursorAdapter extends SimpleCursorAdapter {
 	/**
 	 * Standard constructor.
 	 *
-	 * @param listname
+	 * @param listName The name of the list to preload the cursor with.
 	 */
-	public CreateCursorAdapter(String listname) {
-		super(App.getActivityContext(), R.layout.listview_create, ListDatabase.getInstance()
-						.queryList(listname),
+	public CreateCursorAdapter(String listName) {
+		super(App.getActivityContext(), R.layout.lv_create, ListDatabase.getInstance()
+						.queryList(listName),
 				new String[]{
 						T.C_ITEM_NAME
 				}, new int[]{

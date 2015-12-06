@@ -23,16 +23,16 @@ import com.grillbrickstudios.modalist.model.structs.T;
  */
 public class CheckCursorAdapter extends SimpleCursorAdapter {
 
-	final int _layout = R.layout.listview_check;
+	final int _layout = R.layout.lv_check;
 
 	/**
 	 * Standard constructor.
 	 *
-	 * @param listname
+	 * @param listName The name of the list to preload the cursor with.
 	 */
-	public CheckCursorAdapter(String listname) {
-		super(App.getActivityContext(), R.layout.listview_check, ListDatabase.getInstance()
-						.queryList(listname),
+	public CheckCursorAdapter(String listName) {
+		super(App.getActivityContext(), R.layout.lv_check, ListDatabase.getInstance()
+						.queryList(listName),
 				new String[]{
 						T.C_CHECKED,
 						T.C_ITEM_NAME
@@ -45,9 +45,9 @@ public class CheckCursorAdapter extends SimpleCursorAdapter {
 	/**
 	 * Inflates view(s) from the specified XML file.
 	 *
-	 * @param context
-	 * @param cursor
-	 * @param parent
+	 * @param context The context of the view.
+	 * @param cursor The cursor selecting the current item.
+	 * @param parent The parent view to inflate the layout into.
 	 * @see CursorAdapter#newView(Context,
 	 * Cursor, ViewGroup)
 	 */
@@ -94,9 +94,9 @@ public class CheckCursorAdapter extends SimpleCursorAdapter {
 	 * {@link #setViewImage(ImageView, String)} is invoked. If no appropriate
 	 * binding can be found, an {@link IllegalStateException} is thrown.
 	 *
-	 * @param view
-	 * @param context
-	 * @param c
+	 * @param view The view - already inflated and ready to be populated.
+	 * @param context The context of the layout.
+	 * @param c The cursor selecting the current item.
 	 * @throws IllegalStateException if binding cannot occur
 	 * @see CursorAdapter#bindView(View,
 	 * Context, Cursor)
