@@ -1,14 +1,13 @@
 package com.grillbrickstudios.modalist.controller;
 
-import android.database.Cursor;
 import android.database.SQLException;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+import android.support.v7.widget.RecyclerView;
 
 import com.grillbrickstudios.modalist.controller.adapters.CheckCursorAdapter;
 import com.grillbrickstudios.modalist.controller.adapters.CreateCursorAdapter;
 import com.grillbrickstudios.modalist.controller.adapters.EditCursorAdapter;
 import com.grillbrickstudios.modalist.controller.adapters.MetaCursorAdapter;
+import com.grillbrickstudios.modalist.controller.adapters.WrappedAdapter;
 import com.grillbrickstudios.modalist.model.ListDatabase;
 import com.grillbrickstudios.modalist.model.structs.ListItem;
 import com.grillbrickstudios.modalist.model.structs.T;
@@ -19,45 +18,45 @@ import com.grillbrickstudios.modalist.view.custom.ModeSpinner;
  * Controls the display of the data to the screen. As well as user input.
  */
 public class ListViewManager {
-	private ListView _listView;
+	private RecyclerView _view;
 	private ListDatabase _db;
-	private SimpleCursorAdapter _adapter;
+	private WrappedAdapter _adapter;
 	private String _selectedList;
 
 	public ListViewManager() {
 		_db = ListDatabase.getInstance();
 		_db.open();
-		_adapter = new MetaCursorAdapter();
+		_adapter = new WrappedAdapter(new MetaCursorAdapter());
 	}
 
 	private void enterCreateMode() {
 		if (isListSelected()) {
-			_adapter = new CreateCursorAdapter(_selectedList);
-			_listView.setAdapter(_adapter);
+			_adapter = new WrappedAdapter(new CreateCursorAdapter(_selectedList));
+			_view.setAdapter(_adapter);
 		}
 	}
 
 	private void enterEditMode() {
 		if (isListSelected()) {
-			_adapter = new EditCursorAdapter(_selectedList);
-			_listView.setAdapter(_adapter);
+			_adapter = new WrappedAdapter(new EditCursorAdapter(_selectedList));
+			_view.setAdapter(_adapter);
 		}
 	}
 
 	private void enterCheckMode() {
 		if (isListSelected()) {
-			_adapter = new CheckCursorAdapter(_selectedList);
-			_listView.setAdapter(_adapter);
+			_adapter = new WrappedAdapter(new CheckCursorAdapter(_selectedList));
+			_view.setAdapter(_adapter);
 		}
 	}
 
 	private void enterMetaListMode() {
-		_adapter = new MetaCursorAdapter();
-		_listView.setAdapter(_adapter);
+		_adapter = new WrappedAdapter(new MetaCursorAdapter());
+		_view.setAdapter(_adapter);
 	}
 
-	public void setListView(ListView listView) {
-		_listView = listView;
+	public void setRecyclerView(RecyclerView listView) {
+		_view = listView;
 		enterMetaListMode();
 	}
 
@@ -136,12 +135,11 @@ public class ListViewManager {
 		if (_selectedList.equals(listName)) return false;
 
 		if (!_db.isValidString(listName)) return false;
-		Cursor cursor;
 		try {
-			cursor = _db.queryList(listName);
+			_db.queryList(listName);
 		} catch (SQLException e) {
 			newList(listName);
-			cursor = _db.queryList(listName);
+			_db.queryList(listName);
 		}
 		_selectedList = listName;
 		update();

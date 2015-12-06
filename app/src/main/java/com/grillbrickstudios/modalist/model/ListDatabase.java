@@ -51,8 +51,10 @@ public class ListDatabase {
 	 * @throws SQLException
 	 */
 	public ListDatabase open() throws SQLException {
-		_dbHelper = new DatabaseHelper(_context);
-		_database = _dbHelper.getWritableDatabase();
+		if (_dbHelper == null || _database == null) {
+			_dbHelper = new DatabaseHelper(_context);
+			_database = _dbHelper.getWritableDatabase();
+		}
 		return this;
 	}
 
@@ -60,7 +62,8 @@ public class ListDatabase {
 	 * Closes the openned database.
 	 */
 	public void close() {
-		if (_dbHelper != null) {
+		if (_dbHelper != null && _database != null) {
+			_database.close();
 			_dbHelper.close();
 			_dbHelper = null;
 		}
@@ -222,7 +225,7 @@ public class ListDatabase {
 			return queryMetaList();
 	}
 
-	private Cursor queryListItem(long id){
+	private Cursor queryListItem(long id) {
 		if (id < 0) return null;
 		return _database.query(T.TBL_NAME, null, String.format("%s = %d", T.C_ID, id), null,
 				null, null, null);

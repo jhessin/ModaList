@@ -14,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.grillbrickstudios.modalist.App;
 import com.grillbrickstudios.modalist.R;
+import com.grillbrickstudios.modalist.controller.ListViewManager;
 import com.grillbrickstudios.modalist.view.dummy.DummyContent;
 
 import java.util.List;
@@ -29,6 +31,7 @@ import java.util.List;
  */
 public class ListListActivity extends AppCompatActivity {
 
+	ListViewManager _manager;
 	/**
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
 	 * device.
@@ -40,6 +43,8 @@ public class ListListActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_list);
 
+		App.setActivityContext(this);
+		_manager = new ListViewManager();
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
@@ -68,7 +73,8 @@ public class ListListActivity extends AppCompatActivity {
 	}
 
 	private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-		recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
+//		recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
+		_manager.setRecyclerView(recyclerView);
 	}
 
 	public class SimpleItemRecyclerViewAdapter
