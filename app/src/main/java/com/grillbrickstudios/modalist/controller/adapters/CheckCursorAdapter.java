@@ -2,7 +2,9 @@ package com.grillbrickstudios.modalist.controller.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.grillbrickstudios.modalist.App;
 import com.grillbrickstudios.modalist.R;
 import com.grillbrickstudios.modalist.model.ListDatabase;
 import com.grillbrickstudios.modalist.model.structs.T;
@@ -20,26 +23,60 @@ import com.grillbrickstudios.modalist.model.structs.T;
  */
 public class CheckCursorAdapter extends SimpleCursorAdapter {
 
+	final int _layout = R.layout.listview_check;
+
 	/**
 	 * Standard constructor.
 	 *
-	 * @param context The context where the ListView associated with this
-	 *                SimpleListItemFactory is running
-	 * @param layout  resource identifier of a layout file that defines the views
-	 *                for this list item. The layout file should include at least
-	 *                those named views defined in "to"
-	 * @param c       The database cursor.  Can be null if the cursor is not available yet.
-	 * @param from    A list of column names representing the data to bind to the UI.  Can be null
-	 *                if the cursor is not available yet.
-	 * @param to      The views that should display column in the "from" parameter.
-	 *                These should all be TextViews. The first N views in this list
-	 *                are given the values of the first N columns in the from
-	 *                parameter.  Can be null if the cursor is not available yet.
-	 * @param flags   Flags used to determine the behavior of the adapter,
-	 *                as per {@link CursorAdapter#CursorAdapter(Context, Cursor, int)}.
+	 * @param listname
 	 */
-	public CheckCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
-		super(context, layout, c, from, to, flags);
+	public CheckCursorAdapter(String listname) {
+		super(App.getActivityContext(), R.layout.listview_check, ListDatabase.getInstance()
+						.queryList(listname),
+				new String[]{
+						T.C_CHECKED,
+						T.C_ITEM_NAME
+				}, new int[]{
+						R.id.box,
+						R.id.itemText
+				}, 0);
+	}
+
+	/**
+	 * Inflates view(s) from the specified XML file.
+	 *
+	 * @param context
+	 * @param cursor
+	 * @param parent
+	 * @see CursorAdapter#newView(Context,
+	 * Cursor, ViewGroup)
+	 */
+	@Override
+	public View newView(Context context, Cursor cursor, ViewGroup parent) {
+		Cursor c = getCursor();
+
+		final LayoutInflater inflater = LayoutInflater.from(context);
+		View v = inflater.inflate(_layout, parent, false);
+
+		TextView text = (TextView) v.findViewById(R.id.itemText);
+		CheckBox box = (CheckBox) v.findViewById(R.id.box);
+
+		if (text != null) {
+			text.setText(c.getString(c.getColumnIndex(T.C_ITEM_NAME)));
+		}
+
+		if (box != null) {
+			final ListDatabase db = ListDatabase.getInstance();
+			final int id = c.getInt(c.getColumnIndex(T.C_ID));
+			box.setChecked(c.getInt(c.getColumnIndex(T.C_CHECKED)) != 0);
+			box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					db.updateItem(id, isChecked);
+				}
+			});
+		}
+		return v;
 	}
 
 	/**
@@ -59,7 +96,7 @@ public class CheckCursorAdapter extends SimpleCursorAdapter {
 	 *
 	 * @param view
 	 * @param context
-	 * @param cursor
+	 * @param c
 	 * @throws IllegalStateException if binding cannot occur
 	 * @see CursorAdapter#bindView(View,
 	 * Context, Cursor)
@@ -69,21 +106,23 @@ public class CheckCursorAdapter extends SimpleCursorAdapter {
 	 * @see #setViewText(TextView, String)
 	 */
 	@Override
-	public void bindView(View view, Context context, Cursor cursor) {
-		if (view == view.findViewById(R.id.box)) {
+	public void bindView(View view, Context context, Cursor c) {
+		TextView text = (TextView) view.findViewById(R.id.itemText);
+		CheckBox box = (CheckBox) view.findViewById(R.id.box);
+
+		if (text != null) {
+			text.setText(c.getString(c.getColumnIndex(T.C_ITEM_NAME)));
+		}
+		if (box != null) {
 			final ListDatabase db = ListDatabase.getInstance();
-			final int id = cursor.getInt(cursor.getColumnIndex(T.C_ID));
-			CheckBox box = (CheckBox) view;
-			//noinspection ConstantConditions
-			if (box == null) return;
-			box.setChecked(db.isChecked(id));
+			final int id = c.getInt(c.getColumnIndex(T.C_ID));
+			box.setChecked(c.getInt(c.getColumnIndex(T.C_CHECKED)) != 0);
 			box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					db.updateItem(id, isChecked);
 				}
 			});
-		} else
-			super.bindView(view, context, cursor);
+		}
 	}
 }

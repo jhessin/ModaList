@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
 		// set the Activity context.
 		App.setActivityContext(this);
 
-		// create the input manager.
-		_inManager = new InputManager();
 
 		// set the ContentView.
 		setContentView(R.layout.activity_main);
@@ -41,23 +39,18 @@ public class MainActivity extends AppCompatActivity {
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) actionBar.setDisplayShowTitleEnabled(false);
-		_inManager.setToolbar(toolbar);
-
-		// get the text entry field
-		_inManager.setTextEntry((EditText) findViewById(R.id.text_entry));
-
-		// get the FAB and set its listener to the _inManager.
-		_inManager.setFabPlus((FloatingActionButton) findViewById(R.id.fab_plus));
-		_inManager.setFabDelete((FloatingActionButton) findViewById(R.id.fab_delete));
-		_inManager.setFabBack((FloatingActionButton) findViewById(R.id.fab_back));
-
-		// get the ListView and pass it to the input manager.
-		_inManager.setListView((ListView) findViewById(R.id.listView));
+		// create the input manager.
+		_inManager = new InputManager(toolbar,
+				(FloatingActionButton) findViewById(R.id.fab_plus),
+				(FloatingActionButton) findViewById(R.id.fab_back),
+				(FloatingActionButton) findViewById(R.id.fab_delete),
+				(ListView) findViewById(R.id.listView),
+				(EditText) findViewById(R.id.edit_text));
 	}
 
 	@Override
 	protected void onDestroy() {
-		_inManager.close();
+		if (_inManager != null) _inManager.close();
 		super.onDestroy();
 	}
 }

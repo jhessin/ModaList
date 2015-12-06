@@ -30,8 +30,35 @@ public class InputManager implements View.OnClickListener, AdapterView.OnItemCli
 	private FloatingActionButton _fabDelete;
 	private FloatingActionButton _fabBack;
 
-	public InputManager() {
+	public InputManager(Toolbar toolbar, FloatingActionButton fabPlus, FloatingActionButton
+			fabBack, FloatingActionButton fabDelete, ListView listView, EditText textEntry) {
 		_lvManager = new ListViewManager();
+
+		if (toolbar == null) {
+			Log.d(TAG, "setToolbar: Error getting the toolbar.");
+			return;
+		}
+
+		_modeSpinner = (ModeSpinner) toolbar.findViewById(R.id.mode_spinner);
+		_titleBar = (TextView) toolbar.findViewById(R.id.toolbar_title);
+		_titleBar.setText(R.string.string_all_lists);
+		_modeSpinner.addListener(this);
+
+		_fabDelete = fabDelete;
+		_fabDelete.hide();
+		_fabDelete.setOnClickListener(this);
+
+		_fabBack = fabBack;
+		_fabBack.hide();
+		_fabBack.setOnClickListener(this);
+
+		_fabPlus = fabPlus;
+		_fabPlus.setOnClickListener(this);
+
+		listView.setOnItemClickListener(this);
+		_lvManager.setListView(listView);
+
+		_textEntry = textEntry;
 	}
 
 	/**
@@ -43,35 +70,13 @@ public class InputManager implements View.OnClickListener, AdapterView.OnItemCli
 	public void onClick(View v) {
 		String entry = _textEntry.getText().toString();
 		if (v.equals(_fabPlus)) {
-			if (_lvManager.itemSelected()) {
-				_lvManager.updateSelectedItem(entry);
-				_lvManager.deselectItem();
-				_textEntry.setText("");
-			} else if (_lvManager.listSelected()) {
-				_lvManager.selectItem(_lvManager.insertItem(entry, false));
-				_fabDelete.show();
-			} else {
-				_lvManager.selectItem(_lvManager.insertItem(entry, "...", false));
-				_lvManager.selectList(entry);
-				_textEntry.setText("");
-				_fabBack.show();
-			}
+			// TODO: FabPlus code here.
 		} else if (v.equals(_fabBack)) {
-			if (_lvManager.itemSelected()) {
-				_lvManager.deselectItem();
-				_textEntry.setText("");
-			} else if (_lvManager.listSelected()) {
-				_lvManager.selectList(null);
-				_fabBack.hide();
-				_fabDelete.hide();
-			}
+			// TODO: FabBack code here.
 		} else if (v.equals(_fabDelete)) {
-			if (_lvManager.itemSelected()) {
-				_lvManager.deleteSelected();
-				_fabDelete.hide();
-			}
+			// TODO: FabDelete code here.
 		}
-		_lvManager.notifyDataSetChanged();
+		_lvManager.update();
 	}
 
 	/**
@@ -93,19 +98,15 @@ public class InputManager implements View.OnClickListener, AdapterView.OnItemCli
 		Cursor cursor = ((CursorAdapter) parent.getAdapter()).getCursor();
 		if (cursor == null || cursor.getCount() <= 0) return;
 		cursor.moveToPosition(position);
-		if (_lvManager.listSelected()) {
-			_lvManager.selectItem(cursor.getInt(cursor.getColumnIndex(T.C_ID)));
-			String text = _lvManager.getSelectedItemText();
-			_titleBar.setText(text);
-			_textEntry.setText(text);
-			_fabDelete.show();
+		if (_lvManager.isListSelected()) {
+			_lvManager.selectItem(id);
 		} else {
 			String listName = cursor.getString(cursor.getColumnIndex(T.C_LIST_NAME));
 			_lvManager.selectList(listName);
 			_titleBar.setText(listName);
 			_fabBack.show();
 		}
-		_lvManager.notifyDataSetChanged();
+		_lvManager.update();
 	}
 
 
@@ -126,7 +127,7 @@ public class InputManager implements View.OnClickListener, AdapterView.OnItemCli
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		if (view == _modeSpinner) {
-			_lvManager.notifyDataSetChanged();
+			_lvManager.update();
 		}
 	}
 
@@ -139,52 +140,14 @@ public class InputManager implements View.OnClickListener, AdapterView.OnItemCli
 	 */
 	@Override
 	public void onNothingSelected(AdapterView<?> parent) {
-		_lvManager.notifyDataSetChanged();
+		_lvManager.update();
 	}
 
 	/**
 	 * Closes the openned database.
 	 */
 	public void close() {
-		_lvManager.close();
+		if (_lvManager != null) _lvManager.close();
 	}
 
-	// --- GETTERS AND SETTERS --- //
-	public void setToolbar(Toolbar toolbar) {
-		if (toolbar == null) {
-			Log.d(TAG, "setToolbar: Error getting the toolbar.");
-			return;
-		}
-
-		_modeSpinner = (ModeSpinner) toolbar.findViewById(R.id.mode_spinner);
-		_titleBar = (TextView) toolbar.findViewById(R.id.toolbar_title);
-		_titleBar.setText(R.string.string_all_lists);
-		_modeSpinner.addListener(this);
-	}
-
-	public void setFabDelete(FloatingActionButton fabDelete) {
-		_fabDelete = fabDelete;
-		_fabDelete.hide();
-		_fabDelete.setOnClickListener(this);
-	}
-
-	public void setFabBack(FloatingActionButton fabBack) {
-		_fabBack = fabBack;
-		_fabBack.hide();
-		_fabBack.setOnClickListener(this);
-	}
-
-	public void setFabPlus(FloatingActionButton fab) {
-		_fabPlus = fab;
-		_fabPlus.setOnClickListener(this);
-	}
-
-	public void setListView(ListView listView) {
-		listView.setOnItemClickListener(this);
-		_lvManager.setListView(listView);
-	}
-
-	public void setTextEntry(EditText textEntry) {
-		_textEntry = textEntry;
-	}
 }

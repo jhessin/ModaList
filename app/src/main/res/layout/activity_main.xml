@@ -57,22 +57,30 @@
 
 	</android.support.design.widget.AppBarLayout>
 
-	<include
-		layout="@layout/content_main"
+	<android.support.v7.widget.RecyclerView
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignEnd="@+id/fab_plus"
-		android:layout_alignParentTop="true"
-		android:layout_alignRight="@+id/fab_plus"/>
+		android:layout_height="match_parent"
+		>
 
-	<android.support.design.widget.FloatingActionButton
-		android:id="@+id/fab_plus"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true"
-		android:layout_alignParentEnd="true"
-		android:layout_alignParentRight="true"
-		android:layout_gravity="bottom|end"
-		android:src="@android:drawable/ic_input_add"/>
+		<ListView
+			android:id="@+id/listView"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
 
+		<EditText
+			android:id="@+id/edit_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+
+		<android.support.design.widget.FloatingActionButton
+			android:id="@+id/fab_plus"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentEnd="true"
+			android:layout_alignParentRight="true"
+			android:layout_gravity="bottom|end"
+			android:src="@android:drawable/ic_input_add"/>
+
+	</android.support.v7.widget.RecyclerView>
 </android.support.design.widget.CoordinatorLayout>
