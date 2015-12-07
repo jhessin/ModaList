@@ -23,7 +23,7 @@ import com.grillbrickstudios.modalist.model.structs.T;
  */
 public class CheckCursorAdapter extends SimpleCursorAdapter {
 
-	final int _layout = R.layout.listview_check;
+	final int _layout = R.layout.lv_check;
 
 	/**
 	 * Standard constructor.
@@ -31,7 +31,7 @@ public class CheckCursorAdapter extends SimpleCursorAdapter {
 	 * @param listname
 	 */
 	public CheckCursorAdapter(String listname) {
-		super(App.getActivityContext(), R.layout.listview_check, ListDatabase.getInstance()
+		super(App.getActivityContext(), R.layout.lv_check, ListDatabase.getInstance()
 						.queryList(listname),
 				new String[]{
 						T.C_CHECKED,

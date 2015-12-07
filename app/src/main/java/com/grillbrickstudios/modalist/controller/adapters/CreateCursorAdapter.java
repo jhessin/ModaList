@@ -17,7 +17,7 @@ public class CreateCursorAdapter extends SimpleCursorAdapter {
 	 * @param listname
 	 */
 	public CreateCursorAdapter(String listname) {
-		super(App.getActivityContext(), R.layout.listview_create, ListDatabase.getInstance()
+		super(App.getActivityContext(), R.layout.lv_create, ListDatabase.getInstance()
 						.queryList(listname),
 				new String[]{
 						T.C_ITEM_NAME

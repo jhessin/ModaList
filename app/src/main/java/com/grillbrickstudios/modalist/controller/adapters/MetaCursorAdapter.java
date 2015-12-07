@@ -16,7 +16,7 @@ public class MetaCursorAdapter extends SimpleCursorAdapter {
 	 *
 	 */
 	public MetaCursorAdapter() {
-		super(App.getActivityContext(), R.layout.listview_meta, ListDatabase.getInstance().queryMetaList(),
+		super(App.getActivityContext(), R.layout.lv_meta, ListDatabase.getInstance().queryMetaList(),
 				new String[]{
 						T.C_LIST_NAME
 				}, new int[]{

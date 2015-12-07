@@ -17,7 +17,7 @@ public class EditCursorAdapter extends SimpleCursorAdapter {
 	 * @param listname
 	 */
 	public EditCursorAdapter(String listname) {
-		super(App.getActivityContext(), R.layout.listview_edit, ListDatabase.getInstance()
+		super(App.getActivityContext(), R.layout.lv_edit, ListDatabase.getInstance()
 						.queryList(listname),
 				new String[]{
 						T.C_ITEM_NAME

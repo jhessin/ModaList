@@ -126,6 +126,5 @@ public class ModeSpinner extends AppCompatSpinner implements AdapterView.OnItemS
 	 */
 	@Override
 	public void onNothingSelected(AdapterView<?> parent) {
-
 	}
 }
