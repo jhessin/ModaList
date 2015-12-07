@@ -25,6 +25,10 @@
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="com.grillbrickstudios.modalist.view.Main"/>
 		</activity>
+		<activity
+			android:name=".view.DetailActivity"
+			android:label="@string/title_activity_detail">
+		</activity>
 	</application>
 
 </manifest>

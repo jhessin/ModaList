@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.grillbrickstudios.modalist.App;
@@ -32,6 +33,15 @@ public class Main extends AppCompatActivity {
 		ListView listView = (ListView) findViewById(R.id.listView);
 		assert listView != null;
 		_manager.setListView(listView);
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(Main.this, DetailActivity.class);
+				intent.setAction(T.C_LIST_NAME);
+				intent.putExtra(T.C_ID, id);
+				startActivity(intent);
+			}
+		});
 
 	}
 

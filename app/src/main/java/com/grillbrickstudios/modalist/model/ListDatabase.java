@@ -51,6 +51,9 @@ public class ListDatabase {
 	 * @throws SQLException
 	 */
 	public ListDatabase open() throws SQLException {
+		if (_database != null) _database.close();
+		if (_dbHelper != null) _dbHelper.close();
+
 		_dbHelper = new DatabaseHelper(_context);
 		_database = _dbHelper.getWritableDatabase();
 		return this;
@@ -222,7 +225,7 @@ public class ListDatabase {
 			return queryMetaList();
 	}
 
-	private Cursor queryListItem(long id){
+	private Cursor queryListItem(long id) {
 		if (id < 0) return null;
 		return _database.query(T.TBL_NAME, null, String.format("%s = %d", T.C_ID, id), null,
 				null, null, null);
@@ -278,6 +281,27 @@ public class ListDatabase {
 				count++;
 		}
 		return count;
+	}
+
+	public int updateList(long id, String newName) {
+		if (id < 0) return -1;
+		if (!isValidString(newName)) return 0;
+
+		String oldName = getItem(id).ListName;
+		ContentValues values = new ContentValues();
+		values.put(T.C_LIST_NAME, newName);
+
+		return _database.update(T.TBL_NAME, (values), String.format("%s = %s", T.C_LIST_NAME,
+				wrapString(
+						(oldName))), null);
+	}
+
+	public void deleteList(long id) {
+		if (id < 0) return;
+		String listName = getItem(id).ListName;
+
+		_database.delete(T.TBL_NAME, String.format("%s = %s", T.C_LIST_NAME, wrapString(listName)
+		), null);
 	}
 
 	/**

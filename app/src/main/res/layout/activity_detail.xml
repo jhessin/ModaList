@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context="com.grillbrickstudios.modalist.view.DetailActivity">
+
+	<EditText
+		android:id="@+id/editText"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/activity_vertical_margin"
+		android:layout_marginTop="62dp"
+		android:inputType="textCapWords"/>
+
+	<Button
+		android:id="@+id/btn_edit"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_above="@+id/btn_save"
+		android:layout_alignEnd="@+id/btn_save"
+		android:layout_alignRight="@+id/btn_save"
+		android:onClick="editItem"
+		android:text="@string/edit"/>
+
+	<Button
+		android:id="@+id/btn_save"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentRight="true"
+		android:onClick="saveItem"
+		android:text="@string/save"/>
+
+	<Button
+		android:id="@+id/btn_delete"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:backgroundTint="#ff0000"
+		android:onClick="deleteItem"
+		android:text="@string/delete"/>
+
+</RelativeLayout>

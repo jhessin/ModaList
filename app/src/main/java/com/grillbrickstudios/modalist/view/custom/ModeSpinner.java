@@ -72,6 +72,7 @@ public class ModeSpinner extends AppCompatSpinner implements AdapterView.OnItemS
 	}
 
 	private void init(Context context) {
+		// TODO: Create static spinner adapter to save states between activities.
 		SpinnerAdapter adapter = ArrayAdapter.createFromResource(context, R.array.modes, android
 				.R.layout.simple_spinner_item);
 		setAdapter(adapter);

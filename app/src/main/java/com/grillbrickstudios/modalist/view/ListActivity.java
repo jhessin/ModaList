@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.grillbrickstudios.modalist.App;
@@ -18,6 +19,7 @@ import com.grillbrickstudios.modalist.view.custom.ModeSpinner;
 public class ListActivity extends AppCompatActivity {
 
 	private ListViewManager _manager;
+	private String _listName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,15 @@ public class ListActivity extends AppCompatActivity {
 		ListView listView = (ListView) findViewById(R.id.listView);
 		assert listView != null;
 		_manager.setListView(listView);
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(ListActivity.this, DetailActivity.class);
+				intent.setAction(T.C_ITEM_NAME);
+				intent.putExtra(T.C_ID, id);
+				startActivity(intent);
+			}
+		});
 
 		// Enable back navigation.
 		ActionBar actionBar = getSupportActionBar();
@@ -42,16 +53,19 @@ public class ListActivity extends AppCompatActivity {
 
 		// get the selected list
 		Intent intent = getIntent();
-		switch (intent.getAction()) {
-			case Intent.ACTION_INSERT:
-				if (intent.hasExtra(T.C_LIST_NAME)) {
-					String listName = intent.getStringExtra(T.C_LIST_NAME);
-					_manager.selectList(listName);
-					actionBar.setTitle(listName);
-				}
-				break;
+		if (intent.hasExtra(T.C_LIST_NAME)) {
+			_listName = intent.getStringExtra(T.C_LIST_NAME);
+			_manager.selectList(_listName);
+			actionBar.setTitle(_listName);
 		}
 
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (_manager != null) _manager.update();
 	}
 
 	/**
@@ -112,6 +126,9 @@ public class ListActivity extends AppCompatActivity {
 	}
 
 	public void addListItem(View view) {
-		// TODO: add a list item here.
+		Intent intent = new Intent(this, DetailActivity.class);
+		intent.setAction(Intent.ACTION_INSERT);
+		intent.putExtra(T.C_LIST_NAME, _listName);
+		startActivity(intent);
 	}
 }
