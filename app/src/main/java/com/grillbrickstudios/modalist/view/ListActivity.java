@@ -112,6 +112,6 @@ public class ListActivity extends AppCompatActivity {
 	}
 
 	public void addListItem(View view) {
-		// TODO: add a list item here
+		// TODO: add a list item here.
 	}
 }

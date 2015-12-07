@@ -22,7 +22,7 @@ public class ModeSpinner extends AppCompatSpinner implements AdapterView.OnItemS
 	public static final short EDIT = 1;
 	public static final short CHECK = 2;
 	private static int _currentMode;
-	private static ArrayList<OnItemSelectedListener> _listenerList;
+	private static ArrayList<OnItemSelectedListener> _listenerList = new ArrayList<>();
 
 	/**
 	 * Construct a new spinner with the given context's theme.
@@ -76,7 +76,6 @@ public class ModeSpinner extends AppCompatSpinner implements AdapterView.OnItemS
 				.R.layout.simple_spinner_item);
 		setAdapter(adapter);
 		setOnItemSelectedListener(this);
-		_listenerList = new ArrayList<>();
 	}
 
 	/**
