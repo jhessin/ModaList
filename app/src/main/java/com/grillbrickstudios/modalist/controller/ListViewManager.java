@@ -1,7 +1,8 @@
 package com.grillbrickstudios.modalist.controller;
 
-import android.database.Cursor;
 import android.database.SQLException;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -13,6 +14,9 @@ import com.grillbrickstudios.modalist.model.ListDatabase;
 import com.grillbrickstudios.modalist.model.structs.ListItem;
 import com.grillbrickstudios.modalist.model.structs.T;
 import com.grillbrickstudios.modalist.view.custom.ModeSpinner;
+
+import java.io.Closeable;
+import java.lang.ref.ReferenceQueue;
 
 /**
  * Created by jhess on 11/29/2015 for ModaList.
@@ -28,6 +32,52 @@ public class ListViewManager {
 		_db = ListDatabase.getInstance();
 		_db.open();
 		_adapter = new MetaCursorAdapter();
+
+		ModeSpinner.addListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				update();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				update();
+			}
+		});
+	}
+
+	/**
+	 * Invoked when the garbage collector has detected that this instance is no longer reachable.
+	 * The default implementation does nothing, but this method can be overridden to free resources.
+	 * <p/>
+	 * <p>Note that objects that override {@code finalize} are significantly more expensive than
+	 * objects that don't. Finalizers may be run a long time after the object is no longer
+	 * reachable, depending on memory pressure, so it's a bad idea to rely on them for cleanup.
+	 * Note also that finalizers are run on a single VM-wide finalizer thread,
+	 * so doing blocking work in a finalizer is a bad idea. A finalizer is usually only necessary
+	 * for a class that has a native peer and needs to call a native method to destroy that peer.
+	 * Even then, it's better to provide an explicit {@code close} method (and implement
+	 * {@link Closeable}), and insist that callers manually dispose of instances. This
+	 * works well for something like files, but less well for something like a {@code BigInteger}
+	 * where typical calling code would have to deal with lots of temporaries. Unfortunately,
+	 * code that creates lots of temporaries is the worst kind of code from the point of view of
+	 * the single finalizer thread.
+	 * <p/>
+	 * <p>If you <i>must</i> use finalizers, consider at least providing your own
+	 * {@link ReferenceQueue} and having your own thread process that queue.
+	 * <p/>
+	 * <p>Unlike constructors, finalizers are not automatically chained. You are responsible for
+	 * calling {@code super.finalize()} yourself.
+	 * <p/>
+	 * <p>Uncaught exceptions thrown by finalizers are ignored and do not terminate the finalizer
+	 * thread.
+	 * <p/>
+	 * See <i>Effective Java</i> Item 7, "Avoid finalizers" for more.
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		_db.close();
 	}
 
 	private void enterCreateMode() {
@@ -68,13 +118,6 @@ public class ListViewManager {
 	public void update() {
 		updateMode();
 		_adapter.notifyDataSetChanged();
-	}
-
-	/**
-	 * Closes the openned database.
-	 */
-	public void close() {
-		if (_db != null) _db.close();
 	}
 
 	/**
@@ -133,15 +176,14 @@ public class ListViewManager {
 	}
 
 	public boolean selectList(String listName) {
-		if (_selectedList.equals(listName)) return false;
+		if (_selectedList != null && _selectedList.equals(listName)) return false;
 
 		if (!_db.isValidString(listName)) return false;
-		Cursor cursor;
 		try {
-			cursor = _db.queryList(listName);
+			_db.queryList(listName);
 		} catch (SQLException e) {
 			newList(listName);
-			cursor = _db.queryList(listName);
+			_db.queryList(listName);
 		}
 		_selectedList = listName;
 		update();
@@ -177,5 +219,18 @@ public class ListViewManager {
 
 	public ListItem getItem(long id) {
 		return _db.getItem(id);
+	}
+
+	public String newList() {
+		String listName = "New List";
+		int i = 0;
+		listName = listName + i;
+		while (_db.itemExists(listName, T.EMPTY_ITEM)) {
+			listName = listName.replace(
+					Character.forDigit(i, Character.MAX_RADIX),
+					Character.forDigit(++i, Character.MAX_RADIX));
+		}
+
+		return listName;
 	}
 }

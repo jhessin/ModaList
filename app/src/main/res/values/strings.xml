@@ -2,4 +2,6 @@
 	<string name="app_name">ModaList</string>
 	<string name="title_activity_main">Main</string>
 	<string name="new_list">New List</string>
+	<string name="title_activity_list">ListActivity</string>
+	<string name="add_item">Add Item</string>
 </resources>

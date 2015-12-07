@@ -22,7 +22,7 @@ public class ModeSpinner extends AppCompatSpinner implements AdapterView.OnItemS
 	public static final short EDIT = 1;
 	public static final short CHECK = 2;
 	private static int _currentMode;
-	private ArrayList<OnItemSelectedListener> _listenerList;
+	private static ArrayList<OnItemSelectedListener> _listenerList;
 
 	/**
 	 * Construct a new spinner with the given context's theme.
@@ -67,16 +67,16 @@ public class ModeSpinner extends AppCompatSpinner implements AdapterView.OnItemS
 		return _currentMode;
 	}
 
+	public static void addListener(OnItemSelectedListener l) {
+		_listenerList.add(l);
+	}
+
 	private void init(Context context) {
 		SpinnerAdapter adapter = ArrayAdapter.createFromResource(context, R.array.modes, android
 				.R.layout.simple_spinner_item);
 		setAdapter(adapter);
 		setOnItemSelectedListener(this);
 		_listenerList = new ArrayList<>();
-	}
-
-	public void addListener(OnItemSelectedListener l) {
-		_listenerList.add(l);
 	}
 
 	/**

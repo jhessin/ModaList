@@ -17,6 +17,14 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
+		<activity
+			android:name=".view.ListActivity"
+			android:label="@string/title_activity_list"
+			android:parentActivityName=".view.Main">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="com.grillbrickstudios.modalist.view.Main"/>
+		</activity>
 	</application>
 
 </manifest>

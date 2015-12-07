@@ -2,6 +2,7 @@ package com.grillbrickstudios.modalist.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,14 +15,14 @@ import com.grillbrickstudios.modalist.controller.ListViewManager;
 import com.grillbrickstudios.modalist.model.structs.T;
 import com.grillbrickstudios.modalist.view.custom.ModeSpinner;
 
-public class Main extends AppCompatActivity {
+public class ListActivity extends AppCompatActivity {
 
-	ListViewManager _manager;
+	private ListViewManager _manager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.layout_main);
+		setContentView(R.layout.activity_list);
 
 		// Set Global Activity context.
 		App.setActivityContext(this);
@@ -29,18 +30,28 @@ public class Main extends AppCompatActivity {
 		// create a list view manager.
 		_manager = new ListViewManager();
 
+		// attach the list view to the list view manager.
 		ListView listView = (ListView) findViewById(R.id.listView);
 		assert listView != null;
 		_manager.setListView(listView);
 
-	}
+		// Enable back navigation.
+		ActionBar actionBar = getSupportActionBar();
+		assert actionBar != null;
+		actionBar.setDisplayHomeAsUpEnabled(true);
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+		// get the selected list
+		Intent intent = getIntent();
+		switch (intent.getAction()) {
+			case Intent.ACTION_INSERT:
+				if (intent.hasExtra(T.C_LIST_NAME)) {
+					String listName = intent.getStringExtra(T.C_LIST_NAME);
+					_manager.selectList(listName);
+					actionBar.setTitle(listName);
+				}
+				break;
+		}
 
-		if (_manager != null)
-			_manager.update();
 	}
 
 	/**
@@ -100,12 +111,7 @@ public class Main extends AppCompatActivity {
 		return true;
 	}
 
-
-	public void createNewList(View view) {
-		String listName = _manager.newList();
-		Intent intent = new Intent(this, ListActivity.class);
-		intent.setAction(Intent.ACTION_INSERT);
-		intent.putExtra(T.C_LIST_NAME, listName);
-		startActivity(intent);
+	public void addListItem(View view) {
+		// TODO: add a list item here
 	}
 }
