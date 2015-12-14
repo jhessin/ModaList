@@ -12,9 +12,9 @@ public final class T {
 	public static final String C_LIST_NAME = "List";
 	public static final String C_ITEM_NAME = "Item";
 	public static final String C_CHECKED = "Checked";
-	public static final String EMPTY_ITEM = "'...'";
+	public static final String EMPTY_ITEM = "...";
 
 	public static final String[] S_META_LIST = new String[]{String.format("MIN(%s)", C_ID), C_ID,
 			"*"};
-	public static final String HIDE_EMPTY = C_ITEM_NAME + " <> " + EMPTY_ITEM;
+	public static final String HIDE_EMPTY = String.format("%s <> '%s'", C_ITEM_NAME, EMPTY_ITEM);
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.grillbrickstudios.modalist.App;
@@ -48,6 +49,13 @@ public class DetailActivity extends AppCompatActivity {
 				findViewById(R.id.btn_cancel).setVisibility(View.INVISIBLE);
 				findViewById(R.id.btn_delete).setVisibility(View.INVISIBLE);
 				break;
+			case App.CREATE_LIST:
+				_editText.setHint("Enter list name");
+				actionBar.setTitle("Create new list");
+				((Button) findViewById(R.id.btn_save)).setText(R.string.create);
+				findViewById(R.id.btn_cancel).setVisibility(View.VISIBLE);
+				findViewById(R.id.btn_delete).setVisibility(View.INVISIBLE);
+				break;
 			case T.C_LIST_NAME:
 				assert item != null;
 				_editText.setText(item.ListName);
@@ -68,7 +76,13 @@ public class DetailActivity extends AppCompatActivity {
 	public void saveItem(View view) {
 		// Called by the save button.
 		updateItem();
-		finish();
+		if (_action.equals(App.CREATE_LIST)) {
+			Intent intent = new Intent(this, ListActivity.class);
+			intent.putExtra(T.C_LIST_NAME, _listName);
+			intent.setAction(T.C_LIST_NAME);
+			startActivity(intent);
+		} else
+			finish();
 	}
 
 	public String updateItem() {
@@ -77,6 +91,10 @@ public class DetailActivity extends AppCompatActivity {
 		switch (_action) {
 			case Intent.ACTION_INSERT:
 				_db.insertItem(_listName, newName, false);
+				break;
+			case App.CREATE_LIST:
+				_id = _db.insertItem(newName, T.EMPTY_ITEM, false);
+				_listName = newName;
 				break;
 			case T.C_LIST_NAME:
 				_db.updateList(_id, newName);

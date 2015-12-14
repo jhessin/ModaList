@@ -33,6 +33,7 @@
 		android:onClick="deleteCheckedItems"
 		android:shadowColor="@android:color/holo_red_dark"
 		android:text="@string/delete_checked"
-		android:textSize="@dimen/text_size"/>
+		android:textSize="@dimen/text_size"
+		android:visibility="invisible"/>
 
 </RelativeLayout>

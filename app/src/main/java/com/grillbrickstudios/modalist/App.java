@@ -8,6 +8,7 @@ import android.content.Context;
  * Used for a global Application Context.
  */
 public class App extends Application {
+	public static final String CREATE_LIST = "com.grillbrickstudios.modalist.CREATE";
 	private static Context _context;
 	private static Context _activityContext;
 

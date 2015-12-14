@@ -229,6 +229,8 @@ public class ListViewManager {
 					Character.forDigit(++i, Character.MAX_RADIX));
 		}
 
+		_db.insertItem(listName, T.EMPTY_ITEM, false);
+
 		return listName;
 	}
 

@@ -222,10 +222,8 @@ public class ListDatabase {
 	 */
 	public Cursor queryList(String listName) {
 		if (isValidString(listName))
-			return _database.query(T.TBL_NAME, null, String.format("%s = %s AND ", T
-							.C_LIST_NAME, wrapString(listName)) + T.HIDE_EMPTY, null, null, null,
-					T
-							.C_ID);
+			return _database.query(T.TBL_NAME, null, String.format("%s = %s AND ", T.C_LIST_NAME,
+					wrapString(listName)) + T.HIDE_EMPTY, null, null, null, T.C_ID);
 		else
 			return queryMetaList();
 	}

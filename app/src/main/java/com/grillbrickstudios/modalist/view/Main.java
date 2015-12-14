@@ -132,10 +132,10 @@ public class Main extends AppCompatActivity {
 
 
 	public void createNewList(View view) {
-		String listName = _manager.newList();
-		Intent intent = new Intent(this, ListActivity.class);
-		intent.setAction(Intent.ACTION_INSERT);
-		intent.putExtra(T.C_LIST_NAME, listName);
+//		String listName = _manager.newList();
+		Intent intent = new Intent(this, DetailActivity.class);
+		intent.setAction(App.CREATE_LIST);
+//		intent.putExtra(T.C_LIST_NAME, listName);
 		startActivity(intent);
 	}
 }
