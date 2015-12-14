@@ -12,7 +12,8 @@
 		android:layout_height="wrap_content"
 		android:layout_margin="@dimen/activity_vertical_margin"
 		android:layout_marginTop="62dp"
-		android:inputType="textCapWords"/>
+		android:inputType="textCapWords"
+		android:textSize="@dimen/text_size"/>
 
 	<Button
 		android:id="@+id/btn_edit"
@@ -22,7 +23,8 @@
 		android:layout_alignEnd="@+id/btn_save"
 		android:layout_alignRight="@+id/btn_save"
 		android:onClick="editItem"
-		android:text="@string/edit"/>
+		android:text="@string/edit"
+		android:textSize="@dimen/text_size"/>
 
 	<Button
 		android:id="@+id/btn_save"
@@ -32,7 +34,8 @@
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
 		android:onClick="saveItem"
-		android:text="@string/save"/>
+		android:text="@string/save"
+		android:textSize="@dimen/text_size"/>
 
 	<Button
 		android:id="@+id/btn_delete"
@@ -43,6 +46,7 @@
 		android:layout_alignParentStart="true"
 		android:backgroundTint="#ff0000"
 		android:onClick="deleteItem"
-		android:text="@string/delete"/>
+		android:text="@string/delete"
+		android:textSize="@dimen/text_size"/>
 
 </RelativeLayout>

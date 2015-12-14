@@ -87,8 +87,7 @@ public class ListActivity extends AppCompatActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem spinner = menu.findItem(R.id.mode_spinner);
-		spinner.setActionView(new ModeSpinner(this));
-
+		spinner.setActionView(ModeSpinner.getMainSpinner());
 		return true;
 	}
 

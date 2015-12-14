@@ -22,6 +22,6 @@
 		android:enabled="true"
 		android:onClick="addListItem"
 		android:text="@string/add_item"
-		android:textSize="34sp"/>
+		android:textSize="@dimen/text_size"/>
 
 </RelativeLayout>

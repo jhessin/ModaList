@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import com.grillbrickstudios.modalist.App;
 import com.grillbrickstudios.modalist.R;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class ModeSpinner extends AppCompatSpinner implements AdapterView.OnItemS
 	public static final short CREATE = 0;
 	public static final short EDIT = 1;
 	public static final short CHECK = 2;
+	private static ModeSpinner _mainSpinner;
 	private static int _currentMode;
 	private static ArrayList<OnItemSelectedListener> _listenerList = new ArrayList<>();
 
@@ -71,8 +73,15 @@ public class ModeSpinner extends AppCompatSpinner implements AdapterView.OnItemS
 		_listenerList.add(l);
 	}
 
+	public static ModeSpinner getMainSpinner() {
+		if (_mainSpinner == null) {
+			// TODO: set the attributes for a larger spinner here.
+			_mainSpinner = new ModeSpinner(App.getActivityContext());
+		}
+		return _mainSpinner;
+	}
+
 	private void init(Context context) {
-		// TODO: Create static spinner adapter to save states between activities.
 		SpinnerAdapter adapter = ArrayAdapter.createFromResource(context, R.array.modes, android
 				.R.layout.simple_spinner_item);
 		setAdapter(adapter);

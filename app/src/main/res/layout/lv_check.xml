@@ -7,11 +7,12 @@
 	<CheckBox
 		android:id="@+id/box"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
+		android:layout_height="match_parent"/>
 
 	<TextView
 		android:id="@+id/itemText"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
+		android:layout_height="wrap_content"
+		android:textSize="@dimen/text_size"/>
 
 </LinearLayout>

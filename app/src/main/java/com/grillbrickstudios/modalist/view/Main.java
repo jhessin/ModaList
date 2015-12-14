@@ -36,10 +36,23 @@ public class Main extends AppCompatActivity {
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent(Main.this, DetailActivity.class);
+				Intent intent;
+				intent = new Intent(Main.this, ListActivity.class);
+				intent.putExtra(T.C_LIST_NAME, _manager.getItem(id).ListName);
 				intent.setAction(T.C_LIST_NAME);
-				intent.putExtra(T.C_ID, id);
 				startActivity(intent);
+			}
+		});
+
+		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent;
+				intent = new Intent(Main.this, DetailActivity.class);
+				intent.putExtra(T.C_ID, id);
+				intent.setAction(T.C_LIST_NAME);
+				startActivity(intent);
+				return true;
 			}
 		});
 
@@ -72,7 +85,7 @@ public class Main extends AppCompatActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem spinner = menu.findItem(R.id.mode_spinner);
-		spinner.setActionView(new ModeSpinner(this));
+		spinner.setActionView(ModeSpinner.getMainSpinner());
 
 		return true;
 	}
