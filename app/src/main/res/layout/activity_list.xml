@@ -12,16 +12,27 @@
 		android:layout_height="match_parent"/>
 
 	<Button
-		android:id="@+id/btn_new_list"
+		android:id="@+id/btn_add_item"
 		style="?android:attr/buttonStyleSmall"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
-		android:enabled="true"
 		android:onClick="addListItem"
 		android:text="@string/add_item"
+		android:textSize="@dimen/text_size"/>
+
+	<Button
+		android:id="@+id/btn_delete_checked"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentRight="true"
+		android:onClick="deleteCheckedItems"
+		android:shadowColor="@android:color/holo_red_dark"
+		android:text="@string/delete_checked"
 		android:textSize="@dimen/text_size"/>
 
 </RelativeLayout>

@@ -16,14 +16,14 @@
 		android:textSize="@dimen/text_size"/>
 
 	<Button
-		android:id="@+id/btn_edit"
+		android:id="@+id/btn_cancel"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_above="@+id/btn_save"
 		android:layout_alignEnd="@+id/btn_save"
 		android:layout_alignRight="@+id/btn_save"
-		android:onClick="editItem"
-		android:text="@string/edit"
+		android:onClick="cancelEdit"
+		android:text="@string/cancel"
 		android:textSize="@dimen/text_size"/>
 
 	<Button
@@ -44,8 +44,8 @@
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"
-		android:backgroundTint="#ff0000"
 		android:onClick="deleteItem"
+		android:shadowColor="@android:color/holo_red_dark"
 		android:text="@string/delete"
 		android:textSize="@dimen/text_size"/>
 

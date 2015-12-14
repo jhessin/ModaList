@@ -14,6 +14,8 @@ import com.grillbrickstudios.modalist.App;
 import com.grillbrickstudios.modalist.model.structs.ListItem;
 import com.grillbrickstudios.modalist.model.structs.T;
 
+import java.util.ArrayList;
+
 /**
  * Created by jhess on 11/29/2015 for ModaList.
  * All database functionality stems from here.
@@ -181,6 +183,17 @@ public class ListDatabase {
 				T.C_ID, id));
 
 		return itemsDeleted > 0;
+	}
+
+	public boolean delete(ArrayList<Long> ids) {
+		int totalDeleted = 0;
+		for (Long id :
+				ids) {
+			totalDeleted += _database.delete(T.TBL_NAME, String.format("%s = %d", T.C_ID, id),
+					null);
+		}
+
+		return totalDeleted > 0;
 	}
 
 	private String wrapString(String listName) {

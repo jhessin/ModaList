@@ -1,5 +1,6 @@
 package com.grillbrickstudios.modalist.controller;
 
+import android.database.Cursor;
 import android.database.SQLException;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +18,7 @@ import com.grillbrickstudios.modalist.view.custom.ModeSpinner;
 
 import java.io.Closeable;
 import java.lang.ref.ReferenceQueue;
+import java.util.ArrayList;
 
 /**
  * Created by jhess on 11/29/2015 for ModaList.
@@ -213,10 +215,6 @@ public class ListViewManager {
 		return _selectedList != null;
 	}
 
-	public void selectItem(long id) {
-		// TODO: Start item edit activity here.
-	}
-
 	public ListItem getItem(long id) {
 		return _db.getItem(id);
 	}
@@ -232,5 +230,20 @@ public class ListViewManager {
 		}
 
 		return listName;
+	}
+
+	public void deleteChecked() {
+		if (_adapter == null) return;
+
+		ArrayList<Long> ids = new ArrayList<>();
+
+		Cursor c = _adapter.getCursor();
+		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+			if (c.getInt(c.getColumnIndex(T.C_CHECKED)) != 0)
+				ids.add((long) c.getInt(c.getColumnIndex(T.C_ID)));
+		}
+
+		_db.delete(ids);
+
 	}
 }

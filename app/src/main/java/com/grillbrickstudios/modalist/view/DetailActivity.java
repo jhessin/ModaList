@@ -45,19 +45,22 @@ public class DetailActivity extends AppCompatActivity {
 		switch (_action) {
 			case Intent.ACTION_INSERT:
 				_listName = intent.getStringExtra(T.C_LIST_NAME);
-				findViewById(R.id.btn_edit).setVisibility(View.INVISIBLE);
+				findViewById(R.id.btn_cancel).setVisibility(View.INVISIBLE);
 				findViewById(R.id.btn_delete).setVisibility(View.INVISIBLE);
 				break;
 			case T.C_LIST_NAME:
 				assert item != null;
 				_editText.setText(item.ListName);
 				actionBar.setTitle(item.ListName);
+				findViewById(R.id.btn_cancel).setVisibility(View.VISIBLE);
+				findViewById(R.id.btn_delete).setVisibility(View.VISIBLE);
 				break;
 			case T.C_ITEM_NAME:
 				assert item != null;
 				_editText.setText(item.ItemName);
 				actionBar.setTitle(item.ItemName);
-				findViewById(R.id.btn_edit).setVisibility(View.INVISIBLE);
+				findViewById(R.id.btn_cancel).setVisibility(View.VISIBLE);
+				findViewById(R.id.btn_delete).setVisibility(View.VISIBLE);
 				break;
 		}
 	}
@@ -85,11 +88,8 @@ public class DetailActivity extends AppCompatActivity {
 		return newName;
 	}
 
-	public void editItem(View view) {
-		Intent intent = new Intent(this, ListActivity.class);
-		intent.setAction(Intent.ACTION_EDIT);
-		intent.putExtra(T.C_LIST_NAME, updateItem());
-		startActivity(intent);
+	public void cancelEdit(View view) {
+		finish();
 	}
 
 	public void deleteItem(View view) {

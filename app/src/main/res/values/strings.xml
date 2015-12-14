@@ -6,6 +6,7 @@
 	<string name="add_item">Add Item</string>
 	<string name="title_activity_detail">DetailActivity</string>
 	<string name="save">Save</string>
-	<string name="edit">Edit</string>
+	<string name="cancel">Cancel</string>
 	<string name="delete">Delete</string>
+	<string name="delete_checked">Delete Checked</string>
 </resources>

@@ -39,6 +39,7 @@ public class ListActivity extends AppCompatActivity {
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				if (ModeSpinner.getMode() != ModeSpinner.CREATE) return;
 				Intent intent = new Intent(ListActivity.this, DetailActivity.class);
 				intent.setAction(T.C_ITEM_NAME);
 				intent.putExtra(T.C_ID, id);
@@ -58,6 +59,24 @@ public class ListActivity extends AppCompatActivity {
 			_manager.selectList(_listName);
 			actionBar.setTitle(_listName);
 		}
+
+		ModeSpinner.addListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				findViewById(R.id.btn_add_item).setVisibility(
+						ModeSpinner.getMode() == ModeSpinner.CREATE ? View.VISIBLE : View.INVISIBLE
+				);
+
+				findViewById(R.id.btn_delete_checked).setVisibility(
+						ModeSpinner.getMode() == ModeSpinner.CHECK ? View.VISIBLE : View.INVISIBLE
+				);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+
+			}
+		});
 
 	}
 
@@ -129,5 +148,10 @@ public class ListActivity extends AppCompatActivity {
 		intent.setAction(Intent.ACTION_INSERT);
 		intent.putExtra(T.C_LIST_NAME, _listName);
 		startActivity(intent);
+	}
+
+	public void deleteCheckedItems(View view) {
+		_manager.deleteChecked();
+		_manager.update();
 	}
 }
